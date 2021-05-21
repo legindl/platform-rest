@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class BingNewsCrawler {
                         int code = connection.getResponseCode();
                         if (code != 404) {
                             is = connection.getInputStream();
-                            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
                             String jsonText = readAll(rd);
                             JSONObject json = new JSONObject(jsonText);
                             System.out.println("Looking at: " + url.toString());
@@ -58,17 +59,21 @@ public class BingNewsCrawler {
         }
     }
 
-    public static void createNews(JSONObject newsJson, String category) throws ParseException { ;
+    public static void createNews(JSONObject newsJson, String category) throws ParseException {
         String sourceID = new Source().ReadSourceIDWithName("Bing");
         ArrayList<String> categories= new ArrayList<>();
         categories.add( new Category().ReadCategoryIDWithName(category));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
         Date createDate= formatter.parse((String) newsJson.get("datePublished"));
         Document news = new News().CreateNews(newsJson.get("name").toString(),newsJson.get("url").toString(),sourceID,categories,newsJson.get("description").toString(),createDate.toString(), new Date().toString());
-        try {
-                new newsScraper().scrapeNews(news.get("url").toString(), news.get("_id").toString());
-        } catch (Exception e) {
-        }
+
+            Thread newThread = new Thread(() -> {
+                try {
+                    new newsScraper().scrapeNews(news.get("url").toString(), news.get("_id").toString());
+                } catch (Exception e) {
+                }
+            });
+            newThread.start();
     }
 
     public static List<String> getCategories(){
