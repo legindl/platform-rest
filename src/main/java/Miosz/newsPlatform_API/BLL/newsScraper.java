@@ -44,6 +44,7 @@ public class newsScraper {
     private void updateNewsContent(String newsId, String newsContent) throws Exception {
         System.out.println("Updating content of: " + newsId);
         new News().UpdateNewsField(newsId,"content",newsContent);
+        System.out.println("Starting NLP: " + newsId);
         new NLP().processNews(newsId);
     }
 
