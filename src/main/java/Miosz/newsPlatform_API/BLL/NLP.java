@@ -8,7 +8,7 @@ public class NLP {
 
     public void processNews(String newsID) throws Exception{
         String endpoint = "/nlp/rest/NLP/"+newsID;
-
+        System.out.println("NLPing news");
         URL url = new URL(host +""+ endpoint);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("GET");
