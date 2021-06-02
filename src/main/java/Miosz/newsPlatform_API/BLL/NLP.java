@@ -10,6 +10,10 @@ public class NLP {
         String endpoint = "/nlp/rest/NLP/"+newsID;
 
         URL url = new URL(host +""+ endpoint);
-        url.openStream();
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        int code = connection.getResponseCode();
+        System.out.println(code);
+        connection.disconnect();
     }
 }

@@ -7,7 +7,7 @@
         <packaging>war</packaging>
       </options>
     </properties>
-    <root id="archive" name="newsPlatform-API.war">
+    <root id="archive" name="newsPlatform-API-0.0.1-SNAPSHOT.war">
       <element id="artifact" artifact-name="newsPlatform-API:war exploded" />
     </root>
   </artifact>
